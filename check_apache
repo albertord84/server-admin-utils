@@ -1,0 +1,11 @@
+#!/bin/sh
+
+h=`date +%r`
+if curl -s http://127.0.0.1 > /dev/null; then
+  echo $h - Apache esta corriendo...
+else
+  echo $h - Apache no esta corriendo. Sera levantado...
+  /opt/lampp/lampp startapache
+fi
+
+exit 0
