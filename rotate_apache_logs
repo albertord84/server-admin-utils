@@ -1,0 +1,17 @@
+#!/bin/sh
+
+cd /opt/lampp/logs
+
+for log in `ls *access_log`
+do
+  cat /dev/null > $log
+done
+ 
+for log in `ls *error_log`
+do
+  cat /dev/null > $log
+done
+
+chown -R daemon:root .
+
+exit 0
