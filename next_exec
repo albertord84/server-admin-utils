@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Se requieren dos parametros
+#
+# 1 - Archivo que contenga la hora de proxima ejecucion. Cuando el reloj
+# local llegue a la hora del numero almacenado en el archivo que se pase
+# en el primer parametro, se ejecutara lo suministrado en el segundo
+# parametro. Se espera que este valor sea cambiado periodicamente por
+# alguna aplicacion.
+#
+# 2 - Script o comando que se ejecutara. Si no se pasa nada en el
+# primer parametro, se arrojara un error. Si se pasa algo que no existe
+# como archivo, se ejecutara de todas formas lo suministrado en este
+# segundo parametro.
+#
+
+if test -e $1; then
+  h=`cat $1`
+  c=`date +%H`
+  if test $h -eq $c; then
+    $2
+  fi
+else
+  $2
+fi
+
+exit 0
+
