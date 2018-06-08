@@ -13,6 +13,14 @@
 # como archivo, se ejecutara de todas formas lo suministrado en este
 # segundo parametro.
 #
+# 3 - Archivo pid que sirve para saber si este procesao ya estaba
+# corriendo a fin de evitar que hayan colisiones al acceder a bases
+# de datos, o evitar mensajes duplicados y cosas asi por el estilo.
+
+if test -e $3; then
+  echo "`date "+%b %d %T"` The process is already running. Nothing to do... Bye."
+  exit 0
+fi
 
 if test -e $1; then
   h=`cat $1`
