@@ -1,0 +1,65 @@
+#!/bin/sh
+
+# REQUISITOS PREVIOS PARA QUE EL SCRIPT ENVIE EL MENSAJE
+#
+# sudo apt-get install heirloom-mailx
+# sudo apt install msmtp-mta
+#
+# Si el script correra desde el cron de root, crear este archivo
+#
+# nano /root/.mailrc
+#
+# Si no correra del cron de root sino del usuario "pepito", entonces
+# el archivo se crea asi:
+#
+# nano /home/pepito/.mailrc
+#
+# Luego poner alli lo siguiente:
+#
+# set sendmail="/usr/bin/msmtp"
+# set message-sendmail-extra-arguments="-a gmail"
+#
+# Crear este otro archivo .msmtprc ya sea dentro de /root/.msmtprc
+# si se esta ejecutando el script desde el cron de root, o dentro
+# de /home/pepito/.msmtprc si se esta usando el cron de pepito, y
+# poner alli:
+#
+# defaults
+# logfile /tmp/msmtp.log
+# account gmail
+# auth on
+# host smtp.gmail.com
+# from dumbuzero10@gmail.com
+# auth on
+# tls on
+# #tls_trust_file /etc/ssl/certs/UbuntuOne-Go_Daddy_CA.pem
+# user dumbuzero10@gmail.com
+# password XPcom01.*
+# port 587
+# account default : gmail
+#
+# Por ultimo, los ajustes finales:
+#
+# chmod 600 ~/.msmtprc
+# sudo touch /var/mail/nombre_de_usuario_del_cron
+#
+# Y para enviar mensajes a traves de GMail, es con este comando:
+#
+# echo -e "cuerpo del mensaje" | mail -v -s "asunto del mensaje" -S smtp-use-starttls -S ssl-verify=ignore -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S from="usuario@gmail.com(Nombre Personal)" -S smtp-auth-user=usuario@gmail.com -S smtp-auth-password="password" -S ssl-verify=ignore destinatario@dominio.com
+#
+
+sender="someuser@gmail.com"
+sender_passwd="***********"
+
+p=$1
+first_char=`echo $p | cut -c1-1`
+rest=`echo $p | cut -c2-`
+
+res=`ps ax | grep -c [$first_char]$rest`
+
+if test $res = "2"; then
+  echo -e "System: activate robots" | mail -v -s "Service Status" -S smtp-use-starttls -S ssl-verify=ignore -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S from="$sender(Dumbu)" -S smtp-auth-user=$sender -S smtp-auth-password="$sender_passwd" -S ssl-verify=ignore $2
+else
+  echo ok
+fi
+
