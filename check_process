@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# Script creado conjugando la informacion sacada de:
+# 
+# http://tuxtweaks.com/2012/10/send-gmail-from-the-linux-command-line/
+# https://coderwall.com/p/ez1x2w/send-mail-like-a-boss
+# 
 # PARAMETROS
 #
 # primero: palabra que contiene el nombre del proceso
