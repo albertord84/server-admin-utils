@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# PARAMETROS
+#
+# primero: palabra que contiene el nombre del proceso
+# segundo: direccion de correo que recibira el aviso
+#
 # REQUISITOS PREVIOS PARA QUE EL SCRIPT ENVIE EL MENSAJE
 #
 # sudo apt-get install heirloom-mailx
