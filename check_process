@@ -7,10 +7,11 @@
 # 
 # PARAMETROS
 #
-# primero: usuario de correo gmail
+# primero: usuario de correo
 # segundo: contraseña del correo
 # tercero: palabra que contiene el nombre del proceso
 # cuarto: direccion de correo que recibira el aviso
+# quinto: hora de parada pues no podemos volvernos spammers.
 #
 # REQUISITOS PREVIOS PARA QUE EL SCRIPT ENVIE EL MENSAJE
 #
@@ -31,10 +32,29 @@
 # echo -e "cuerpo del mensaje" | mail -v -s "asunto del mensaje" -S smtp-use-starttls -S ssl-verify=ignore -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S from="usuario@gmail.com(Nombre Personal)" -S smtp-auth-user=usuario@gmail.com -S smtp-auth-password="password" -S ssl-verify=ignore -S nss-config-dir=/etc/pki/nssdb destinatario@dominio.com
 #
 
+if test $# -ne 5; then
+  echo ""
+  echo "Faltan parametros. Debe suplir:"
+  echo ""
+  echo "- Primero: usuario de correo"
+  echo "- Segundo: contraseña del correo"
+  echo "- Tercero: palabra que contiene el nombre del proceso"
+  echo "- Cuarto: direccion de correo que recibira el aviso"
+  echo "- Quinto: hora de parada pues no podemos volvernos spammers."
+  echo ""
+  exit 1
+fi
+
+h=`date +%k`
+if test $h -gt $5; then
+  echo "Llego el horario de parada. No hay envio de avisos por ahora."
+  exit 0
+fi
+
 sender="$1"
 sender_passwd="$2"
-$proc="$3"
-$dest="$4"
+proc="$3"
+dest="$4"
 
 first_char=`echo $proc | cut -c1-1`
 rest=`echo $proc | cut -c2-`
@@ -47,7 +67,7 @@ res=`ps ax | grep -c [$first_char]$rest`
 # es curioso que desde consola devuelve 0 cuando no esta
 # corriendo el proceso. pero desde dentro del script devuelve 2.
 if test $res = "2"; then
-  echo -e "System: activate robots" | mail -v -s "Service Status" -S smtp-use-starttls -S ssl-verify=ignore -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S from="$sender(Dumbu)" -S smtp-auth-user=$sender -S smtp-auth-password="$sender_passwd" -S ssl-verify=ignore $dest
+  echo -e "System: the process $proc is not running" | mail -v -s "Service Status" -S smtp-use-starttls -S ssl-verify=ignore -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S from="$sender(Dumbu)" -S smtp-auth-user=$sender -S smtp-auth-password="$sender_passwd" -S ssl-verify=ignore $dest
 else
   echo ok
 fi
