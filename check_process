@@ -7,8 +7,10 @@
 # 
 # PARAMETROS
 #
-# primero: palabra que contiene el nombre del proceso
-# segundo: direccion de correo que recibira el aviso
+# primero: usuario de correo gmail
+# segundo: contraseña del correo
+# tercero: palabra que contiene el nombre del proceso
+# cuarto: direccion de correo que recibira el aviso
 #
 # REQUISITOS PREVIOS PARA QUE EL SCRIPT ENVIE EL MENSAJE
 #
@@ -58,17 +60,18 @@
 # echo -e "cuerpo del mensaje" | mail -v -s "asunto del mensaje" -S smtp-use-starttls -S ssl-verify=ignore -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S from="usuario@gmail.com(Nombre Personal)" -S smtp-auth-user=usuario@gmail.com -S smtp-auth-password="password" -S ssl-verify=ignore destinatario@dominio.com
 #
 
-sender="someuser@gmail.com"
-sender_passwd="***********"
+sender="$1"
+sender_passwd="$2"
+$proc="$3"
+$dest="$4"
 
-p=$1
-first_char=`echo $p | cut -c1-1`
-rest=`echo $p | cut -c2-`
+first_char=`echo $proc | cut -c1-1`
+rest=`echo $proc | cut -c2-`
 
 res=`ps ax | grep -c [$first_char]$rest`
 
 if test $res = "2"; then
-  echo -e "System: activate robots" | mail -v -s "Service Status" -S smtp-use-starttls -S ssl-verify=ignore -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S from="$sender(Dumbu)" -S smtp-auth-user=$sender -S smtp-auth-password="$sender_passwd" -S ssl-verify=ignore $2
+  echo -e "System: activate robots" | mail -v -s "Service Status" -S smtp-use-starttls -S ssl-verify=ignore -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S from="$sender(Dumbu)" -S smtp-auth-user=$sender -S smtp-auth-password="$sender_passwd" -S ssl-verify=ignore $dest
 else
   echo ok
 fi
