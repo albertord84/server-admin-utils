@@ -60,7 +60,7 @@ dest="$4"
 first_char=`echo $proc | cut -c1-1`
 rest=`echo $proc | cut -c2-`
 
-id=`date +%s`
+id=`cat /dev/urandom | tr -dc '0-9a-zA-Z' | head -c 30`
 # si hacemos grep sin encerrar en corchetes el primer
 # caracter, nos devolvera resultado 1 o 2 aunque el proceso
 # no este corriendo. y queremos saber si se devuelve 0.
@@ -73,7 +73,8 @@ res=`grep -v sudo /tmp/procs.$id.txt | grep -v "@" | grep -c $proc`
 rm /tmp/procs.$id.txt
 
 if test $res = "0"; then
-  echo -e "System: the process $proc is not running" | mail -v -s "Service Status" -S smtp-use-starttls -S ssl-verify=ignore -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S from="$sender(Dumbu)" -S smtp-auth-user=$sender -S smtp-auth-password="$sender_passwd" -S ssl-verify=ignore -S nss-config-dir=/etc/pki/nssdb $dest
+  host=`hostname -f`
+  echo -e "System: the process $proc is not running" | mail -v -s "Service Status: $host" -S smtp-use-starttls -S ssl-verify=ignore -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S from="$sender(Dumbu)" -S smtp-auth-user=$sender -S smtp-auth-password="$sender_passwd" -S ssl-verify=ignore -S nss-config-dir=/etc/pki/nssdb $dest
 else
   dt=`date | cut -c5-19`
   echo "$dt Hay $res proceso(s) ejecutandose cuyo nombre contiene $proc"
