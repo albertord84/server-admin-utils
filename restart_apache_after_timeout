@@ -1,0 +1,15 @@
+#!/bin/sh
+
+tries="1"
+timeout="20"
+url="http://dumbu.one"
+
+if /usr/bin/wget -t ${tries} -T ${timeout} -O - ${url}; then
+  echo Apache is working...
+  exit 0
+else
+  echo Apache was not working. I will restart it...
+  /usr/sbin/service httpd restart
+  exit 0
+fi
+
